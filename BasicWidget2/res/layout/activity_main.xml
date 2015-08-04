@@ -47,6 +47,18 @@
         android:inputType="textPassword"
         android:singleLine="true" />
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/gallery_photo_1" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/photo1" />
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
