@@ -1,7 +1,10 @@
 package com.example.androidcomponent;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -11,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -35,7 +39,52 @@ public class MainActivity extends ActionBarActivity {
 				
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_start);
+		btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, MyService.class);
+				intent.putExtra("count", 100);
+				startService(intent);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_stop);
+		btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, MyService.class);
+				stopService(intent);				
+			}
+		});
 	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		IntentFilter filter = new IntentFilter(MyService.ACTION_COUNT);
+		registerReceiver(mCountReceiver, filter);
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		unregisterReceiver(mCountReceiver);
+	}
+	
+	BroadcastReceiver mCountReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int count = intent.getIntExtra("count", 0);
+			Toast.makeText(MainActivity.this, "Activity count" + count, Toast.LENGTH_SHORT).show();
+			setResultCode(Activity.RESULT_OK);
+		}
+		
+	};
 
 	@Override 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
