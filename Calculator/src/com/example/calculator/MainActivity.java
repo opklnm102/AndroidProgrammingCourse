@@ -8,10 +8,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 	TextView windowView; 
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -97,25 +98,29 @@ public class MainActivity extends ActionBarActivity {
 		btnAdd.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				windowView.append("+");
+				windowView.setText("");
+				windowView.setHint("Add");
 			}
 		});
 		btnSub.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				windowView.append("-");
+				windowView.setText("");
+				windowView.setHint("Subtract");
 			}
 		});
 		btnMul.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				windowView.append("*");
+				windowView.setText("");
+				windowView.setHint("Multiply");
 			}
 		});
 		btnDiv.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				windowView.append("/");
+				windowView.setText("");
+				windowView.setHint("Divide");
 			}
 		});
 		btnClear.setOnClickListener(new OnClickListener() {			
@@ -127,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
 		btnEqual.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				windowView.setText("0");
+				windowView.setText("");
 			}
 		});
 		
