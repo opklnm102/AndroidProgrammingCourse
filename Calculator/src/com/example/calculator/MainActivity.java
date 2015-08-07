@@ -12,7 +12,11 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 	TextView windowView; 
-
+	String first, second;
+	double operation1, operation2, result;
+	int operator ;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,6 +102,9 @@ public class MainActivity extends ActionBarActivity {
 		btnAdd.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
+				first = windowView.getText().toString();
+				operation1 = Double.parseDouble(first);
+				operator = 1;
 				windowView.setText("");
 				windowView.setHint("Add");
 			}
@@ -105,6 +112,9 @@ public class MainActivity extends ActionBarActivity {
 		btnSub.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
+				first = windowView.getText().toString();
+				operation1 = Double.parseDouble(first);
+				operator = 2;
 				windowView.setText("");
 				windowView.setHint("Subtract");
 			}
@@ -112,6 +122,9 @@ public class MainActivity extends ActionBarActivity {
 		btnMul.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
+				first = windowView.getText().toString();
+				operation1 = Double.parseDouble(first);
+				operator = 3;
 				windowView.setText("");
 				windowView.setHint("Multiply");
 			}
@@ -119,6 +132,9 @@ public class MainActivity extends ActionBarActivity {
 		btnDiv.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
+				first = windowView.getText().toString();
+				operation1 = Double.parseDouble(first);
+				operator = 4;
 				windowView.setText("");
 				windowView.setHint("Divide");
 			}
@@ -132,7 +148,20 @@ public class MainActivity extends ActionBarActivity {
 		btnEqual.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				windowView.setText("");
+				second = windowView.getText().toString();
+				operation2 = Double.parseDouble(second);
+				switch(operator) {
+				case 1: result = operation1 + operation2;
+					break;
+				case 2: result = operation1 - operation2;
+					break;
+				case 3: result = operation1 * operation2;
+					break;
+				case 4: result = operation1 / operation2;
+					break;
+				}
+				windowView.setText(""+result);
+				windowView.setHint("");
 			}
 		});
 		
