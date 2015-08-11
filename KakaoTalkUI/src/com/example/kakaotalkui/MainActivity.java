@@ -12,6 +12,7 @@ public class MainActivity extends ActionBarActivity {
 	TabHost tabHost;
 	TabsAdapter mAdapter;
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,12 +23,21 @@ public class MainActivity extends ActionBarActivity {
 		
 		pager = (ViewPager)findViewById(R.id.pager);
 		mAdapter = new TabsAdapter(this, getSupportFragmentManager(), tabHost, pager);
+		
 		mAdapter.addTab(tabHost.newTabSpec("friends").setIndicator("Friends"), FriendsFragment.class, null);
+		mAdapter.addTab(tabHost.newTabSpec("chats").setIndicator("Chats"), ChatFragment.class, null);
 		
 		if(savedInstanceState != null) {
 			tabHost.setCurrentTab(savedInstanceState.getInt("tabIndex", 0));
 			mAdapter.onRestoreInstanceState(savedInstanceState);
 		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("tabIndex", tabHost.getCurrentTab());
+		mAdapter.onSaveInstanceState(outState);
 	}
 
 	@Override

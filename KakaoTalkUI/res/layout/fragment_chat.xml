@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/list_chats"
         android:layout_width="match_parent"
         android:layout_height="436dp" >
     </ListView>
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content" >
 
         <EditText
-            android:id="@+id/text_messge"
+            android:id="@+id/text_chat_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="6"
