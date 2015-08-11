@@ -12,13 +12,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Browser;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -28,6 +30,9 @@ import android.widget.Toast;
 
 import com.begentgroup.xmlparser.XMLParser;
 import com.example.navermovie.NetworkManager.OnResultListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -35,15 +40,63 @@ public class MainActivity extends ActionBarActivity {
 //	ArrayAdapter<MovieItem> mAdapter;
 	MyAdapter mAdapter;
 	EditText inputView;
+	boolean isUpdate = false;
+	PullToRefreshListView refreshView;
+	
+	Handler mHandler = new Handler(Looper.getMainLooper());
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         inputView = (EditText)findViewById(R.id.editText1);
+
+        refreshView = (PullToRefreshListView)findViewById(R.id.listView1);
+        refreshView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> rv) {
+				String keyword = mAdapter.getKeyword();
+				if(!TextUtils.isEmpty(keyword)) {
+					int startIndex = mAdapter.getStartOffset();
+					if(startIndex != MyAdapter.INVALID_START_INDEX) {
+						NetworkManager.getInstance().getNaverMovie(MainActivity.this, keyword, startIndex, 20, 
+								new OnResultListener<NaverMovie>() {
+							
+							@Override
+							public void onSuccess(final NaverMovie result) {
+								mHandler.postDelayed(new Runnable() {
+									
+									@Override
+									public void run() {
+										mAdapter.addAll(result.items);
+										refreshView.onRefreshComplete();
+									}
+								}, 20);
+							}
+							
+							@Override
+							public void onFail(int code) {
+								refreshView.onRefreshComplete();
+							}
+						});
+						return;
+					}
+				}
+				mHandler.postDelayed(new Runnable() {
+					
+					@Override
+					public void run() {
+						refreshView.onRefreshComplete();
+					}
+				}, 20);
+			}
+		});
         
-        listView = (ListView)findViewById(R.id.listView1);
-//        mAdapter = new ArrayAdapter<MovieItem>(this, android.R.layout.simple_list_item_1);
+        listView = refreshView.getRefreshableView();
+ 
+//      listView = (ListView)findViewById(R.id.listView1);
+//      mAdapter = new ArrayAdapter<MovieItem>(this, android.R.layout.simple_list_item_1);
         mAdapter = new MyAdapter();
         listView.setAdapter(mAdapter);
         
@@ -60,6 +113,39 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
         
+/*        listView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				if(firstVisibleItem + visibleItemCount >= totalItemCount) {
+					String keyword = mAdapter.getKeyword();
+					if(!TextUtils.isEmpty(keyword)) {
+						int startIndex = mAdapter.getStartOffset();
+						if(startIndex != MyAdapter.INVALID_START_INDEX) {
+							NetworkManager.getInstance().getNaverMovie(MainActivity.this, keyword, startIndex, 20, 
+									new OnResultListener<NaverMovie>() {
+								
+								@Override
+								public void onSuccess(final NaverMovie result) {
+									mAdapter.addAll(result.items);
+									isUpdate = true;
+								}
+								
+								@Override
+								public void onFail(int code) {
+									isUpdate = false;
+								}
+							});
+						}
+					}
+				}
+			}
+		});*/
+        
         Button btn = (Button)findViewById(R.id.btn_search);
         btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -75,6 +161,7 @@ public class MainActivity extends ActionBarActivity {
 								@Override
 								public void onSuccess(NaverMovie result) {
 									mAdapter.addAll(result.items);
+									// TODO
 								}
 
 								@Override
