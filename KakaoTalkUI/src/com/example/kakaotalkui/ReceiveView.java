@@ -14,17 +14,19 @@ public class ReceiveView extends FrameLayout {
 	
 	ImageView iconView;
 	TextView messageView;
+	TextView dateView;
 	
 	private void init() {
 		inflate(getContext(), R.layout.view_receive, this);
 		iconView = (ImageView)findViewById(R.id.image_icon);
 		messageView = (TextView)findViewById(R.id.text_receive_message);
-		
+		dateView = (TextView)findViewById(R.id.text_receive_date);		
 	}
 	
 	public void setReceiveData(ReceiveData data) {
 		messageView.setText(data.message);
 		iconView.setImageResource(data.iconId);
+		dateView.setText(data.date);
 	}
 
 }

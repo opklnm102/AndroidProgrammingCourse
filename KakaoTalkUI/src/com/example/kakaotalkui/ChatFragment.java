@@ -1,5 +1,6 @@
 package com.example.kakaotalkui;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.os.Bundle;
@@ -13,13 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 public class ChatFragment extends Fragment {
 	ListView listView;
 	ChattingAdapter mAdapter;
 	RadioGroup group;
 	EditText inputView;
+	
+	SimpleDateFormat chatDateFormat = new SimpleDateFormat("hh:mm a");
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,13 +48,14 @@ public class ChatFragment extends Fragment {
 					case R.id.radio_send:
 						SendData sd = new SendData();
 						sd.message = input;
-						sd.date = new Date().toString();
+						sd.date = chatDateFormat.format(new Date()).toString();
 						mAdapter.add(sd);
 						break;
 					case R.id.radio_receive:
 						ReceiveData rd = new ReceiveData();
 						rd.iconId = R.drawable.ic_launcher;
 						rd.message = input;
+						rd.date = chatDateFormat.format(new Date()).toString();
 						mAdapter.add(rd);
 						break;
 					case R.id.radio_date:
